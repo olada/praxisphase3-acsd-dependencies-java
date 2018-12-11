@@ -31,7 +31,7 @@ public class CreateMap {
             FileWriter fileWriter = new FileWriter(fileData.getAbsoluteFile());
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            // Write in file
+            // Write in filegjkbghzki
             bufferedWriter.write(content);
 
             // Close
