@@ -1,8 +1,7 @@
+/*Dead Class*/
+
 package de.cofinpro.melise.praxisphase3;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
@@ -11,15 +10,14 @@ import java.util.Scanner;
  * Updated by Melise Akcay, Cofinpro AG.
  * Date: 6.12.2018.
  */
-
 public class ReadInputAttribute {
 
-    public void readInput(){
+    public void readInput() throws Exception {
+
         System.out.println("Enter your attribute-ID: ");
         Scanner scanner = new Scanner(System.in);
         String attributeID = scanner.nextLine();
-        System.out.println("Your attribute-ID is " + attributeID);
-
+        System.out.println("Your attribute-ID is " +attributeID);
 
     }
 
