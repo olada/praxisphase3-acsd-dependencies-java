@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static org.junit.Assert.*;
@@ -32,7 +33,7 @@ public class ReadTsvFileTest {
 
     @Test
     public void testFillMap() {
-        HashMap<String, SdAttribute> map = new HashMap<>();
+        HashMap<String, Node> map = new HashMap<>();
         assertEquals(0, map.size());
 
         readTsvFile.fillMap(map, "hallo", "welt");
@@ -40,13 +41,13 @@ public class ReadTsvFileTest {
         assertEquals(1, map.size());
         assertTrue(map.containsKey("hallo"));
 
-        SdAttribute sdAttribute = map.get("hallo");
+        Node node = map.get("hallo");
 
 //        SdAttribute expected = new SdAttribute("hallo", "welt");
 //        assertEquals(expected,sdAttribute);
 
-        assertEquals("hallo", sdAttribute.getId());
-        assertEquals("welt", sdAttribute.getDescription());
+        assertEquals("hallo", node.getValue().getId());
+        assertEquals("welt", node.getValue().getDescription());
 
     }
 
@@ -87,7 +88,7 @@ public class ReadTsvFileTest {
     @Test
     public void testSplitTsv() throws Exception {
         List<String> tsvFile = readTsvFile.getTsvFile();
-        HashMap<String, SdAttribute> map = new HashMap<>();
+        Map<String, Node> map = new HashMap<>();
 
         //checks if map is empty
         assertEquals(0, map.size());
@@ -96,8 +97,8 @@ public class ReadTsvFileTest {
 
         //Checks if map has 955 entries
         assertEquals(955, map.size());
-        assertEquals("co#MON006", map.get("co#MON006").getId());
-        assertEquals("MONITORING TABTABLE HASHES", map.get("co#MON006").getDescription());
+        assertEquals("co#MON006", map.get("co#MON006").getValue().getId());
+        assertEquals("MONITORING TABTABLE HASHES", map.get("co#MON006").getValue().getDescription());
 
     }
 
@@ -116,6 +117,11 @@ public class ReadTsvFileTest {
         System.out.println("description of attr1 = " + attr1.getDescription());
         System.out.println("description of attr2 = " + attr2.getDescription());
         System.out.println("description of attr3 = " + attr3.getDescription());
+    }
+
+    @Test
+    public void testToJson(){
+
     }
 
 }

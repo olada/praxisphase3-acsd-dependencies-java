@@ -47,10 +47,10 @@ public class SdAttribute {
         return Objects.hash(id, description);
     }
 
-    /*public String toString() {
+    public String toString() {
         return "SdAttribute{" +
                 "id='" + id + '\'' +
                 ", description='" + description + '\'' +
                 '}';
-    }*/
+    }
 }

@@ -1,51 +1,86 @@
 package de.cofinpro.melise.praxisphase3;
 
 import org.junit.*;
-import org.mockito.Mockito;
-
-import java.lang.reflect.Array;
 import java.util.*;
+import static org.junit.Assert.*;
 
 public class NodeTest {
-    private Node node;
-    private SdAttribute sdAttribute = new SdAttribute("hello", "world");
+    private Node helloNode;
+    private SdAttribute helloSdAttribute = new SdAttribute("hello", "world");
 
     @Before
     public void before() {
         //Vorbereitung
-        node= new Node(sdAttribute);
+        helloNode = new Node(helloSdAttribute);
+    }
+
+//    @Test
+//    public void testToString() {
+//
+//        SdAttribute pipiSdAttribute = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
+//
+//        helloNode.add(pipiSdAttribute);
+//
+//        String toString = helloNode.toString(true);
+//
+//        assertTrue(toString.contains(pipiSdAttribute.getId()));
+//
+//    }
+
+    @Test
+    public void testToString2() {
+
+        SdAttribute pipiSdAttribute = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
+
+        helloNode.add(pipiSdAttribute);
+
+        String toString = helloNode.toString2();
+
+        assertTrue(toString.contains(pipiSdAttribute.getId()));
+
+    }
+
+    @Test
+    public void testToJson(){
+        SdAttribute pipiSdAttribute = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
+//        Node childNode = new Node(pipiSdAttribute);
+
+//        helloNode.add(childNode);
+        helloNode.add(pipiSdAttribute);
+
+        String toJson = helloNode.toJson();
+
+        assertTrue(toJson.contains(pipiSdAttribute.getId()));
+
     }
 
     @Test
     public void testGetValue() {
         SdAttribute sdAttribute = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
         Node newNode= new Node(sdAttribute);
-
-
         SdAttribute value = newNode.getValue();
 
-        Assert.assertEquals(sdAttribute, value);
-
+        assertEquals(sdAttribute, value);
     }
 
     @Test
     public void testGetChildren_NoNode() {
 
-        Set<Node> children = node.getChildren();
+        Set<Node> children = helloNode.getChildren();
 
-        Assert.assertTrue(children.isEmpty());
+        assertTrue(children.isEmpty());
     }
 
     @Test
     public void testGetChildren_HasNode() {
-        SdAttribute sdAttribute = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-        node.add(sdAttribute);
+        SdAttribute pipiChild = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
+        helloNode.add(pipiChild);
 
-        Set<Node> children = node.getChildren();
+        Set<Node> children = helloNode.getChildren();
         Object[] nodeArray = children.toArray();
 
-        Assert.assertEquals(1,nodeArray.length);
-        Assert.assertSame(((Node) nodeArray[0]).getValue(), sdAttribute);
+        assertEquals(1,nodeArray.length);
+        assertSame(((Node) nodeArray[0]).getValue(), pipiChild);
     }
 
     @Test
@@ -54,21 +89,21 @@ public class NodeTest {
         SdAttribute child1 = new SdAttribute("Superman", "Krypton");
         SdAttribute child2 = new SdAttribute("Das Sams", "Sommersprossen");
 
-        Node child0Node = new Node(child0, node);
-        Node child1Node = new Node(child1, node);
-        Node child2Node = new Node(child2, node);
+        Node child0Node = new Node(child0, helloNode);
+        Node child1Node = new Node(child1, helloNode);
+        Node child2Node = new Node(child2, helloNode);
 
 
-        node.add(child0);
-        node.add(child1);
-        node.add(child2);
+        helloNode.add(child0Node);
+        helloNode.add(child1Node);
+        helloNode.add(child2Node);
 
-        Set<Node> children = node.getChildren();
+        Set<Node> children = helloNode.getChildren();
 
-        Assert.assertEquals(3,children.size());
-        Assert.assertTrue(children.contains(child0Node));
-        Assert.assertTrue(children.contains(child1Node));
-        Assert.assertTrue(children.contains(child2Node));
+        assertEquals(3,children.size());
+        assertTrue(children.contains(child0Node));
+        assertTrue(children.contains(child1Node));
+        assertTrue(children.contains(child2Node));
 
     }
 
@@ -80,7 +115,7 @@ public class NodeTest {
         SdAttribute searchedChild = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
 
         //Durchführung
-        boolean hasSpecificChild = node.hasSpecificChild(searchedChild);
+        boolean hasSpecificChild = helloNode.hasSpecificChild(searchedChild);
 
         //Erwartetes Ergebnis
         Assert.assertFalse(hasSpecificChild);
@@ -92,14 +127,15 @@ public class NodeTest {
 
         //Vorbereitung
         SdAttribute child0 = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-        node.add(child0);
+
+        helloNode.add(child0);
 
         //Durchführung
         SdAttribute searchedChild = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-        boolean hasSpecificChild = node.hasSpecificChild(searchedChild);
+        boolean hasSpecificChild = helloNode.hasSpecificChild(searchedChild);
 
         //Erwartetes Ergebnis
-        Assert.assertTrue(hasSpecificChild);
+        assertTrue(hasSpecificChild);
 
     }
 
@@ -109,15 +145,15 @@ public class NodeTest {
 
         //Vorbereitung
         SdAttribute child0 = new SdAttribute("Das Sams", "Sommersprossen");
-
-        node.add(child0);
+        Node samsNode = new Node(child0);
+        helloNode.add(samsNode);
 
         //Durchführung
         SdAttribute searchedChild = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-        boolean hasSpecificChild = node.hasSpecificChild(searchedChild);
+        boolean hasSpecificChild = helloNode.hasSpecificChild(searchedChild);
 
         //Erwartetes Ergebnis
-        Assert.assertFalse(hasSpecificChild);
+        assertFalse(hasSpecificChild);
 
     }
 
@@ -129,18 +165,21 @@ public class NodeTest {
         SdAttribute child0 = new SdAttribute("Batman", "Fledermaus");
         SdAttribute child1 = new SdAttribute("Superman", "Krypton");
         SdAttribute child2 = new SdAttribute("Das Sams", "Sommersprossen");
+        Node batmanNode = new Node(child0);
+        Node supermanNode = new Node(child1);
+        Node samsNode = new Node(child2);
+        helloNode.add(batmanNode);
+        helloNode.add(supermanNode);
+        helloNode.add(samsNode);
 
-        node.add(child0);
-        node.add(child1);
-        node.add(child2);
 
         //Durchführung
 
         SdAttribute searchedChild = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-        boolean hasSpecificChild = node.hasSpecificChild(searchedChild);
+        boolean hasSpecificChild = helloNode.hasSpecificChild(searchedChild);
 
         //Erwartetes Ergebnis
-        Assert.assertFalse(hasSpecificChild);
+        assertFalse(hasSpecificChild);
 
     }
 
@@ -154,17 +193,17 @@ public class NodeTest {
         SdAttribute child2 = new SdAttribute("Superman", "Krypton");
         SdAttribute child3 = new SdAttribute("Das Sams", "Sommersprossen");
 
-        node.add(child0);
-        node.add(child1);
-        node.add(child2);
-        node.add(child3);
+        helloNode.add(child0);
+        helloNode.add(child1);
+        helloNode.add(child2);
+        helloNode.add(child3);
 
         //Durchführung
         SdAttribute searchedChild = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-        boolean hasSpecificChild = node.hasSpecificChild(searchedChild);
+        boolean hasSpecificChild = helloNode.hasSpecificChild(searchedChild);
 
         //Erwartetes Ergebnis
-        Assert.assertTrue(hasSpecificChild);
+        assertTrue(hasSpecificChild);
 
     }
 
@@ -175,10 +214,10 @@ public class NodeTest {
         //Fall: keine Knoten
 
         //Durchführung
-        boolean dependency = node.hasAnyChildren();
+        boolean dependency = helloNode.hasAnyChildren();
 
         //Erwartetes ergebnis
-        Assert.assertFalse(dependency);
+        assertFalse(dependency);
     }
 
     @Test
@@ -188,13 +227,15 @@ public class NodeTest {
 
         //Vorbereitung
         SdAttribute child1 = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-        node.add(child1);
+        Node pipiNode = new Node(child1);
+        helloNode.add(pipiNode);
+
 
         //Durchführung
-        boolean hasAnyChildren = node.hasAnyChildren();
+        boolean hasAnyChildren = helloNode.hasAnyChildren();
 
         //Erwartetes Ergebnis
-        Assert.assertTrue(hasAnyChildren);
+        assertTrue(hasAnyChildren);
 
     }
 
@@ -205,16 +246,18 @@ public class NodeTest {
 
         //Vorbereitung
         SdAttribute child1 = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-        node.add(child1);
+        Node pipiNode = new Node(child1);
+        helloNode.add(pipiNode);
 
         SdAttribute child2 = new SdAttribute("Das Sams", "Sommersprossen");
-        node.add(child2);
+        Node samsNode = new Node(child2);
+        helloNode.add(samsNode);
 
         //Durchführung
-        boolean hasAnyChildren = node.hasAnyChildren();
+        boolean hasAnyChildren = helloNode.hasAnyChildren();
 
         //Erwartetes Ergebnis
-        Assert.assertTrue(hasAnyChildren);
+        assertTrue(hasAnyChildren);
 
     }
 }

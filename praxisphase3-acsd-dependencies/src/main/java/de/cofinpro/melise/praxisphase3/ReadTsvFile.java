@@ -14,58 +14,72 @@ public class ReadTsvFile {
 
     }
 
+    //gets TSV File from path
     public List<String> getTsvFile() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("co#sap.tsv").toURI());
         List<String> tsvFile = Files.readAllLines(path);
+
+        //removed Header (first Line)
+        tsvFile.remove(0);
+
         return tsvFile;
     }
 
+    //Gets AttributeId
     public String getAttributeID() {
         System.out.println("Enter your attribute-ID: ");
         String attributeID = scanner.nextLine();
+
         return attributeID;
     }
 
-    //vorher nachher test der Map oder Map zurück geben (in Zusammenhang mit executeAllMethods())
-    public HashMap<String, SdAttribute> splitTsv(List<String> tsvFile) {
-        HashMap<String, SdAttribute> map = new HashMap<>();
-
+    //Splits FIle into Tab seperated Values
+    public Map<String, Node> splitTsv(List<String> tsvFile) {
+        Map<String, Node> map = new HashMap<>();
         for (String dataRow : tsvFile) {
+
             String[] dataArray = dataRow.split("\t");
             String id = dataArray[INDEX_ID];
             String description = dataArray[INDEX_DESCRIPTION];
             fillMap(map, id, description);
         }
+
         return map;
     }
 
-    //teste vorher nachher der Map
-    public void fillMap(HashMap<String, SdAttribute> map, String id, String description) {
+    //fills Map with id and description
+    public void fillMap(Map<String, Node> map, String id, String description) {
 
         SdAttribute sdAttribute = new SdAttribute(id, description);
-        map.put(id, sdAttribute);
-
         Node node = new Node(sdAttribute);
-        System.out.println( node.getValue().toString());
+        map.put(id, node);
+
     }
 
-    public void printAttributeByInput(HashMap<String, SdAttribute> map, String attributeID) {
+    // prints the Attribute with the same Input Id
+    public void printAttributeByInput(Map<String, Node> map, String attributeID) {
+
         if (map.containsKey(attributeID)) {
 
-            System.out.println("your Attribute-ID:" + map.get(attributeID));
+            System.out.println("your Attribute-ID is:" + map.get(attributeID).getValue().toString());
+
+        } else {
+
+            System.out.println("NOT a valid attribute-ID");
+
         }
     }
 
-    public void printMapSize(HashMap<String, SdAttribute> map) {
+    //prints the Size of the Map
+    public void printMapSize(Map<String, Node> map) {
         System.out.println(map.size());
     }
 
     public void executeAllMethods() throws Exception {
         List<String> tsvFile = getTsvFile();
-        HashMap<String, SdAttribute> map = new HashMap<>();
 
         String attributeID = getAttributeID();
-        splitTsv(tsvFile);
+        Map<String, Node> map = splitTsv(tsvFile);
         printAttributeByInput(map, attributeID);
         printMapSize(map);
     }
