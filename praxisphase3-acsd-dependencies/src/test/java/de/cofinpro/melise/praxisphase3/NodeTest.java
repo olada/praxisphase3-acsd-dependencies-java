@@ -14,45 +14,20 @@ public class NodeTest {
         helloNode = new Node(helloSdAttribute);
     }
 
-//    @Test
-//    public void testToString() {
-//
-//        SdAttribute pipiSdAttribute = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-//
-//        helloNode.add(pipiSdAttribute);
-//
-//        String toString = helloNode.toString(true);
-//
-//        assertTrue(toString.contains(pipiSdAttribute.getId()));
-//
-//    }
 
     @Test
-    public void testToString2() {
+    public void testToString() {
 
         SdAttribute pipiSdAttribute = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
 
         helloNode.add(pipiSdAttribute);
 
-        String toString = helloNode.toString2();
+        String toString = helloNode.toString();
 
         assertTrue(toString.contains(pipiSdAttribute.getId()));
 
     }
 
-    @Test
-    public void testToJson(){
-        SdAttribute pipiSdAttribute = new SdAttribute("Pipi Langstrumpf", "Regenbogensocken");
-//        Node childNode = new Node(pipiSdAttribute);
-
-//        helloNode.add(childNode);
-        helloNode.add(pipiSdAttribute);
-
-        String toJson = helloNode.toJson();
-
-        assertTrue(toJson.contains(pipiSdAttribute.getId()));
-
-    }
 
     @Test
     public void testGetValue() {
