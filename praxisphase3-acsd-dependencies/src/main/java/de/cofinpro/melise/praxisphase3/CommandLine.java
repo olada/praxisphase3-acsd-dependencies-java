@@ -5,9 +5,7 @@ import java.util.Scanner;
 public class CommandLine {
 
     public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
-        ReadTsvFile readTsvFile = new ReadTsvFile(scanner);
+        ReadTsvFile readTsvFile = new ReadTsvFile();
         readTsvFile.executeAllMethods();
-
     }
 }
