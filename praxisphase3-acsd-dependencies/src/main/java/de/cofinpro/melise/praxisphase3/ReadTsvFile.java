@@ -73,20 +73,7 @@ public class ReadTsvFile {
          * START Nodes in Beziehung zueinander setzen (Links = Kind von rechts -> bezogen auf co#sad.tsv [AttributeDependenciesFile])
          * ########################
          */
-        // TODO: Durch linesOfAttributeDependencies iterieren, für jede Zeile unten stehende Kommentare durchführen
-        // In der Methode, die co#sad.tsv verarbeitet:
-        // String leftAttributeId = zeileAusSadFile[LINKE_SPALTE]
-        // String rightAttributeId = zeileAusSadFile[RECHTE_SPALTE]
-        //
-        // Node nodeOfLeftAttributeId = map.get(leftAttributeId); <-- map aus Zeile 82
-        // Node nodeOfRightAttributeId = map.get(rightAttributeId);
-        //
-        // Links = child von rechts
-        // Bedeutet: Rechter Node erhält linken Node als Child
-        //
-        // if (nodeOfLeftAttributeId != null && ...right... != null) {
-        //      nodeOfRightAttributeId.addChild(nodeOfLeftAttributeId);
-        // }
+
         for (String dataRow : linesOfAttributeDependencies) {
 
             if (dataRow.contains("\t")) {
@@ -104,7 +91,6 @@ public class ReadTsvFile {
             }
 
         }
-
 
         /**
          * ENDE Nodes in Beziehung zueinander setzen (Links = Kind von rechts -> bezogen auf co#sad.tsv [AttributeDependenciesFile])
@@ -129,8 +115,6 @@ public class ReadTsvFile {
             e.printStackTrace();
         }
 
-
-
         try (BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file, true))) {
             for (String attributeId : attributeNodesMap.keySet()) {
                 JsonNode attributeJsonNode = new JsonNode(attributeNodesMap.get(attributeId));
@@ -142,7 +126,6 @@ public class ReadTsvFile {
 
             e.printStackTrace();
         }
-
         /**
          * ENDE zur Usereingabe passendes Json in JavascriptDatei schreiben
          */
