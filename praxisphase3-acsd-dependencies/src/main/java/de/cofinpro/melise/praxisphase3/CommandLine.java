@@ -1,6 +1,6 @@
 package de.cofinpro.melise.praxisphase3;
 
-import java.util.Scanner;
+/** Klasse dient zur Ausfühung aller Komponenten*/
 
 public class CommandLine {
 

@@ -1,5 +1,5 @@
 package de.cofinpro.melise.praxisphase3;
-
+/** Klasse speichert  die Baumstruktur der Attribute */
 import java.util.*;
 
 public class Node {

@@ -2,7 +2,7 @@
  * POJO for Stammdaten Attribute
  */
 package de.cofinpro.melise.praxisphase3;
-
+/** POJO für SDAttribute  */
 import java.util.Objects;
 
 public class SdAttribute {

@@ -18,8 +18,7 @@ public class ReadTsvFileTest {
     private Scanner scannerMock;
     @Before
     public void before() {
-        scannerMock = Mockito.mock(Scanner.class);
-        readTsvFile = new ReadTsvFile(scannerMock);
+        readTsvFile = new ReadTsvFile();
         System.out.println("Before");
     }
 

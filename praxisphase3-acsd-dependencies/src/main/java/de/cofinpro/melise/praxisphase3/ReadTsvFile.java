@@ -1,4 +1,8 @@
 package de.cofinpro.melise.praxisphase3;
+/** Klasse where the magic happens.
+ * Klasse liest co#sap ein und erzeugt map in der die erste spalte (die Id) als key abgespeichert und die zweite spalte(description) als value gespeichert wird
+ * Klasse liest co#sad ein und setzt die Nodes in Beziehung zueinander links=Kind ,rechts=parent
+ * schreibt alle Jsons der Bäume in Javascript-Datei */
 
 import java.io.BufferedWriter;
 import java.io.File;
