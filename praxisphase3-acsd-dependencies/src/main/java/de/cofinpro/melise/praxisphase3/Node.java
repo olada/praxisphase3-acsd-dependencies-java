@@ -1,6 +1,5 @@
 package de.cofinpro.melise.praxisphase3;
-
-import com.google.gson.Gson;
+/** Klasse speichert  die Baumstruktur der Attribute */
 import java.util.*;
 
 public class Node {
@@ -8,7 +7,6 @@ public class Node {
     //Variables
     private SdAttribute value;
     private Node parent = null;
-    private String parent_id = null;
     private Set<Node> children = new HashSet<>();
 
     //Constructor
@@ -21,14 +19,21 @@ public class Node {
 
         this.value = sdAttribute;
         this.parent = parent;
+    }
 
+    public Node ( Node source){
+        this.value = source.value;
+        this.parent = source.parent;
+        this.children = source.children;
     }
 
     //Methods
 
     public Node getParent() {
+
         return parent;
     }
+
     public SdAttribute getValue() {
 
         return value;
@@ -36,7 +41,7 @@ public class Node {
 
     public Set<Node> getChildren() {
 
-        return children;
+        return new HashSet<>(children);
     }
 
     public boolean hasSpecificChild(SdAttribute sdAttribute) {
@@ -58,7 +63,9 @@ public class Node {
 
     public void add(Node childNode) {
 
-        children.add(childNode);
+        Node copyOfChildNode = new Node(childNode);
+        copyOfChildNode.parent = this;
+        children.add(copyOfChildNode);
     }
 
     public String toString() {

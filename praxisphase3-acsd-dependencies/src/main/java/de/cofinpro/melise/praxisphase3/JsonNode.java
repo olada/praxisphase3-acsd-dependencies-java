@@ -1,7 +1,6 @@
 package de.cofinpro.melise.praxisphase3;
-
+/** Dient zur Umformung des Nodes to Json  */
 import com.google.gson.Gson;
-
 import java.util.HashSet;
 import java.util.Set;
 

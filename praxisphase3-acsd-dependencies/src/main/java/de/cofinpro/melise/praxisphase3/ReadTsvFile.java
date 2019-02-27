@@ -1,42 +1,39 @@
 package de.cofinpro.melise.praxisphase3;
+/** Klasse where the magic happens.
+ * Klasse liest co#sap ein und erzeugt map in der die erste spalte (die Id) als key abgespeichert und die zweite spalte(description) als value gespeichert wird
+ * Klasse liest co#sad ein und setzt die Nodes in Beziehung zueinander links=Kind ,rechts=parent
+ * schreibt alle Jsons der Bäume in Javascript-Datei */
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
 public class ReadTsvFile {
 
+    public static final int LEFT_ATTRIBUTE = 0;
     private static final int INDEX_ID = 0;
     private static final int INDEX_DESCRIPTION = 1;
-    private Scanner scanner;
-
-    public ReadTsvFile(Scanner scanner) {
-        this.scanner = scanner;
-
-    }
+    public static final int RIGHT_ATTRIBUTE = 1;
 
     //gets TSV File from path
-    public List<String> getTsvFile() throws Exception {
+    public List<String> readAttributeDeclarationsFile() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("co#sap.tsv").toURI());
-        List<String> tsvFile = Files.readAllLines(path);
+        List<String> linesOfAttributeDeclarations = Files.readAllLines(path);
 
         //removed Header (first Line)
-        tsvFile.remove(0);
+        linesOfAttributeDeclarations.remove(0);
 
-        return tsvFile;
+        return linesOfAttributeDeclarations;
     }
 
-    //Gets AttributeId
-    public String getAttributeID() {
-        System.out.println("Enter your attribute-ID: ");
-        String attributeID = scanner.nextLine();
-
-        return attributeID;
-    }
 
     //Splits FIle into Tab seperated Values
-    public Map<String, Node> splitTsv(List<String> tsvFile) {
+    public Map<String, Node> createMapFromAttributeDeclarations(List<String> linesOfAttributeDeclarations) {
         Map<String, Node> map = new HashMap<>();
-        for (String dataRow : tsvFile) {
+        for (String dataRow : linesOfAttributeDeclarations) {
 
             String[] dataArray = dataRow.split("\t");
             String id = dataArray[INDEX_ID];
@@ -49,39 +46,93 @@ public class ReadTsvFile {
 
     //fills Map with id and description
     public void fillMap(Map<String, Node> map, String id, String description) {
-
         SdAttribute sdAttribute = new SdAttribute(id, description);
         Node node = new Node(sdAttribute);
         map.put(id, node);
 
     }
 
-    // prints the Attribute with the same Input Id
-    public void printAttributeByInput(Map<String, Node> map, String attributeID) {
-
-        if (map.containsKey(attributeID)) {
-
-            System.out.println("your Attribute-ID is:" + map.get(attributeID).getValue().toString());
-
-        } else {
-
-            System.out.println("NOT a valid attribute-ID");
-
-        }
-    }
-
-    //prints the Size of the Map
-    public void printMapSize(Map<String, Node> map) {
-        System.out.println(map.size());
-    }
 
     public void executeAllMethods() throws Exception {
-        List<String> tsvFile = getTsvFile();
+        List<String> linesOfAttributeDeclarations = readAttributeDeclarationsFile();
 
-        String attributeID = getAttributeID();
-        Map<String, Node> map = splitTsv(tsvFile);
-        printAttributeByInput(map, attributeID);
-        printMapSize(map);
+        /**
+         * ########################
+         * START EINLESEN VON CO#SAD.TSV [AttributeDependenciesFile]
+         * ########################
+         */
+        Path sadPath = Paths.get(getClass().getClassLoader().getResource("co#sad.tsv").toURI());
+        List<String> linesOfAttributeDependencies = Files.readAllLines(sadPath);
+
+        //removed Header (first Line)
+        linesOfAttributeDependencies.remove(0);
+
+        /**
+         * ENDE EINLESEN VON CO#SAD.TSV
+         */
+
+        Map<String, Node> attributeNodesMap = createMapFromAttributeDeclarations(linesOfAttributeDeclarations);
+        /**
+         * ########################
+         * START Nodes in Beziehung zueinander setzen (Links = Kind von rechts -> bezogen auf co#sad.tsv [AttributeDependenciesFile])
+         * ########################
+         */
+
+        for (String dataRow : linesOfAttributeDependencies) {
+
+            if (dataRow.contains("\t")) {
+
+                String[] dataRowArray = dataRow.split("\t");
+                String leftAttributeId = dataRowArray[LEFT_ATTRIBUTE];
+                String rightAttributeId = dataRowArray[RIGHT_ATTRIBUTE];
+                Node nodeOfLeftAttribute = attributeNodesMap.get(leftAttributeId);
+                Node nodeOfRightAttribute = attributeNodesMap.get(rightAttributeId);
+
+                if (nodeOfLeftAttribute != null && nodeOfRightAttribute != null) {
+                    nodeOfRightAttribute.add(nodeOfLeftAttribute);
+                }
+
+            }
+
+        }
+
+        /**
+         * ENDE Nodes in Beziehung zueinander setzen (Links = Kind von rechts -> bezogen auf co#sad.tsv [AttributeDependenciesFile])
+         */
+
+
+        /**
+         * ########################
+         * START zur Usereingabe passendes Json in JavascriptDatei schreiben
+         * ########################
+         */
+
+        File file = new File("C:\\Develop\\Melise\\workspace\\praxisphase3-acsd-dependencies-frontend\\JavaOutput.js");
+        file.delete();
+        file.createNewFile();
+
+        try (BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file, true))) {
+
+            bufferedwriter.write("var myMap = new Map();");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file, true))) {
+            for (String attributeId : attributeNodesMap.keySet()) {
+                JsonNode attributeJsonNode = new JsonNode(attributeNodesMap.get(attributeId));
+                bufferedwriter.write("\n");
+                bufferedwriter.write("myMap.set(" + " '" + attributeId + "' , '[" + attributeJsonNode.toJson() + "]');");
+
+            }
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        /**
+         * ENDE zur Usereingabe passendes Json in JavascriptDatei schreiben
+         */
     }
 
 }

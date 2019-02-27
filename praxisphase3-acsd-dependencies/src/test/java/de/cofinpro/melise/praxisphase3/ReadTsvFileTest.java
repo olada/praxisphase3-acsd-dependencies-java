@@ -3,8 +3,6 @@ package de.cofinpro.melise.praxisphase3;
 import org.junit.*;
 import org.mockito.Mockito;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,8 +18,7 @@ public class ReadTsvFileTest {
     private Scanner scannerMock;
     @Before
     public void before() {
-        scannerMock = Mockito.mock(Scanner.class);
-        readTsvFile = new ReadTsvFile(scannerMock);
+        readTsvFile = new ReadTsvFile();
         System.out.println("Before");
     }
 
@@ -55,7 +52,7 @@ public class ReadTsvFileTest {
     public void TestGetTsvFile() throws Exception {
 
 
-        List<String> tsvFile = readTsvFile.getTsvFile();
+        List<String> tsvFile = readTsvFile.readAttributeDeclarationsFile();
         Path expectedPath = Paths.get(getClass().getClassLoader().getResource("co#sap_testIdentical.tsv").toURI());
 //      Path expectedPath = Paths.get(getClass().getClassLoader().getResource("co#sap_testDifferent.tsv").toURI());
         List<String> expectedTsvFile = Files.readAllLines(expectedPath);
@@ -64,36 +61,16 @@ public class ReadTsvFileTest {
 
     }
 
-    @Test
-    public void TestGetAttributeId() {
-        Mockito.when(scannerMock.nextLine()).thenReturn("co#MON006");
-        String expected = "co#MON006";
-        String attribute = readTsvFile.getAttributeID();
-        Mockito.verify(scannerMock).nextLine();
-
-        assertEquals(expected, attribute);
-
-    }
-    @Test
-    public void TestGetAttributeId_second() {
-        Mockito.when(scannerMock.nextLine()).thenReturn("Apfelstrudel");
-        String expected = "Apfelstrudel";
-        String attribute = readTsvFile.getAttributeID();
-        Mockito.verify(scannerMock).nextLine();
-
-        assertEquals(expected, attribute);
-
-    }
 
     @Test
     public void testSplitTsv() throws Exception {
-        List<String> tsvFile = readTsvFile.getTsvFile();
+        List<String> tsvFile = readTsvFile.readAttributeDeclarationsFile();
         Map<String, Node> map = new HashMap<>();
 
         //checks if map is empty
         assertEquals(0, map.size());
 
-        map = readTsvFile.splitTsv(tsvFile);
+        map = readTsvFile.createMapFromAttributeDeclarations(tsvFile);
 
         //Checks if map has 955 entries
         assertEquals(955, map.size());
